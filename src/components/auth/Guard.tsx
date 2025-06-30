@@ -1,11 +1,9 @@
-import { JSX } from "react";
-
 import { useGetMe } from "../../hooks/useGetMe";
 import excludedRoutes from "../../constants/excluded-routes";
 
 
 interface GuardProps {
-  children: JSX.Element;
+  children: React.ReactNode;
 }
 
 const Guard = ({ children }: GuardProps) => {
