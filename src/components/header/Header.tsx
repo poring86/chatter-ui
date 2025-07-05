@@ -1,4 +1,4 @@
-import * as React from "react";
+
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
@@ -33,6 +33,8 @@ const unauthenticatedPages: Page[] = [
 const Header = () => {
   const authenticated = useReactiveVar(authenticatedVar);
 
+  console.log('authenticated', authenticated)
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -43,6 +45,7 @@ const Header = () => {
           />
           <MobileBranding />
           <Navigation pages={authenticated ? pages : unauthenticatedPages} />
+          <Settings />
           {authenticated && <Settings />}
         </Toolbar>
       </Container>

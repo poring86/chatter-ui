@@ -1,4 +1,4 @@
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, InMemoryCache, HttpLink, from } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 import { API_URL } from "./urls";
 import excludedRoutes from "./excluded-routes";
@@ -18,12 +18,14 @@ const logoutLink = onError((error) => {
   }
 });
 
-const httpLink = new HttpLink({ uri: `${API_URL}/graphql` });
+const httpLink = new HttpLink({
+  uri: `${API_URL}/graphql`,
+  credentials: "include",
+});
 
 const client = new ApolloClient({
+  link: from([logoutLink, httpLink]),
   cache: new InMemoryCache(),
-  credentials: "include",
-  link: logoutLink.concat(httpLink),
 });
 
 export default client;
