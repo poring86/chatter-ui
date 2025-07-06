@@ -1,4 +1,3 @@
-
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
@@ -7,10 +6,9 @@ import MobileNavigation from "./mobile/MobileNavigation";
 import MobileBranding from "./mobile/MobileBranding";
 import Navigation from "./Navigation";
 import Settings from "./Settings";
-import { useReactiveVar } from "@apollo/client";
+import { useQuery, gql } from "@apollo/client";
 
 import { Page } from "../../interfaces/page.interface";
-import { authenticatedVar } from "../../constants/authenticated";
 
 const pages: Page[] = [
   {
@@ -30,8 +28,21 @@ const unauthenticatedPages: Page[] = [
   },
 ];
 
+const ME_QUERY = gql`
+  query Me {
+    me {
+      _id
+      email
+    }
+  }
+`;
+
 const Header = () => {
-  const authenticated = useReactiveVar(authenticatedVar);
+  const { data, loading } = useQuery(ME_QUERY, {
+    fetchPolicy: "network-only",
+  });
+
+  const authenticated = !!data?.me;
 
   console.log('authenticated', authenticated)
 
@@ -45,11 +56,11 @@ const Header = () => {
           />
           <MobileBranding />
           <Navigation pages={authenticated ? pages : unauthenticatedPages} />
-          <Settings />
           {authenticated && <Settings />}
         </Toolbar>
       </Container>
     </AppBar>
   );
 };
+
 export default Header;

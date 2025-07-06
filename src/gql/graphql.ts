@@ -16,6 +16,21 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Chat = {
+  __typename?: 'Chat';
+  _id: Scalars['ID']['output'];
+  isPrivate: Scalars['Boolean']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  userId: Scalars['String']['output'];
+  userIds: Array<Scalars['String']['output']>;
+};
+
+export type CreateChatInput = {
+  isPrivate: Scalars['Boolean']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  userIds?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 export type CreateUserInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -23,14 +38,32 @@ export type CreateUserInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createChat: Chat;
   createUser: User;
+  removeChat: Chat;
   removeUser: User;
+  updateChat: Chat;
   updateUser: User;
+};
+
+
+export type MutationCreateChatArgs = {
+  createChatInput: CreateChatInput;
 };
 
 
 export type MutationCreateUserArgs = {
   createUserInput: CreateUserInput;
+};
+
+
+export type MutationRemoveChatArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateChatArgs = {
+  updateChatInput: UpdateChatInput;
 };
 
 
@@ -40,14 +73,28 @@ export type MutationUpdateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  chat: Chat;
+  chats: Array<Chat>;
   me: User;
   user: User;
   users: Array<User>;
 };
 
 
+export type QueryChatArgs = {
+  _id: Scalars['String']['input'];
+};
+
+
 export type QueryUserArgs = {
   _id: Scalars['String']['input'];
+};
+
+export type UpdateChatInput = {
+  id: Scalars['Int']['input'];
+  isPrivate?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  userIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type UpdateUserInput = {
