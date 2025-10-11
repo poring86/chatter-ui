@@ -3,12 +3,15 @@ import ChatListItem from "./chat-list-item/ChatListItem";
 import { Divider, Stack } from "@mui/material";
 import ChatListHeader from "./chat-list-header/ChatListHeader";
 import { useState } from "react";
-import ChatListAdd from "./chat-list-add/ChatListAdd";
+
 import { useGetChats } from "../../hooks/useGetChats";
+import ChatListAdd from "./chat-list-add/ChatListAdd";
 
 const ChatList = () => {
   const [chatListAddVisible, setChatListAddVisible] = useState(false);
   const { data } = useGetChats();
+
+  console.log('data', data)
 
   return (
     <>

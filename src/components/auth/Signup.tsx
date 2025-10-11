@@ -18,7 +18,7 @@ const Signup = () => {
       error={error}
       onSubmit={async ({ email, password }) => {
         try {
-          await createUser({
+          const user = await createUser({
             variables: {
               createUserInput: {
                 email,

@@ -6,10 +6,9 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { ListItemButton } from "@mui/material";
 import router from "../../Routes";
-import { Chat } from "../../../gql/graphql";
 
 interface ChatListProps {
-  chat: Chat;
+  chat?: string | null;
 }
 
 const ChatListItem = ({ chat }: any) => {
