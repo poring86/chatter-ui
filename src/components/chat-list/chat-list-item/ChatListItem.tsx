@@ -6,12 +6,14 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { ListItemButton } from "@mui/material";
 import router from "../../Routes";
+import { Chat } from "../../gql/graphql";
 
 interface ChatListProps {
-  chat?: string | null;
+  chat: Chat
 }
 
-const ChatListItem = ({ chat }: any) => {
+const ChatListItem = ({ chat }: ChatListProps) => {
+
   return (
     <>
       <ListItem alignItems="flex-start" disablePadding>

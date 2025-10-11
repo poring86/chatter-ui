@@ -11,8 +11,6 @@ const ChatList = () => {
   const [chatListAddVisible, setChatListAddVisible] = useState(false);
   const { data } = useGetChats();
 
-  console.log('data', data)
-
   return (
     <>
       <ChatListAdd
