@@ -6,18 +6,21 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { ListItemButton } from "@mui/material";
 import router from "../../Routes";
-import { Chat } from "../../gql/graphql";
+import { Chat } from "../../../gql/graphql";
 
 interface ChatListProps {
-  chat: Chat
+  chat: Chat;
+  selected: boolean;
 }
 
-const ChatListItem = ({ chat }: ChatListProps) => {
-
+const ChatListItem = ({ chat, selected }: ChatListProps) => {
   return (
     <>
       <ListItem alignItems="flex-start" disablePadding>
-        <ListItemButton onClick={() => router.navigate(`/chats/${chat._id}`)}>
+        <ListItemButton
+          onClick={() => router.navigate(`/chats/${chat._id}`)}
+          selected={selected}
+        >
           <ListItemAvatar>
             <Avatar alt="Remy Sharp" src="/static/iamages/avatar/1.jpg" />
           </ListItemAvatar>

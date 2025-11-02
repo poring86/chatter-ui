@@ -16,8 +16,6 @@ const Auth = ({ submitLabel, onSubmit, children, error }: AuthProps) => {
   const { data } = useGetMe();
   const navigate = useNavigate();
 
-  console.log('data', data)
-
   useEffect(() => {
     if (data) {
       navigate("/");
