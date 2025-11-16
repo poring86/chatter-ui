@@ -22,7 +22,6 @@ export type Chat = {
   __typename?: 'Chat';
   _id: Scalars['ID']['output'];
   isPrivate: Scalars['Boolean']['output'];
-  latestMessage?: Maybe<Message>;
   name?: Maybe<Scalars['String']['output']>;
   userId: Scalars['String']['output'];
   userIds: Array<Scalars['String']['output']>;
