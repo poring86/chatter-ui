@@ -1,5 +1,5 @@
-import { useQuery } from '@apollo/client';
-import { graphql } from '../gql';
+import { useQuery } from "@apollo/client";
+import { graphql } from "../gql";
 
 export const getChatsDocument = graphql(`
   query Chats {
