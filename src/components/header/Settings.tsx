@@ -10,10 +10,14 @@ import { useLogout } from "../../hooks/useLogout";
 import { onLogout } from "../../utils/logout";
 import { snackVar } from "../../constants/snack";
 import { UNKNOWN_ERROR_SNACK_MESSAGE } from "../../constants/errors";
+import router from "../Routes";
+
+import { useGetMe } from "../../hooks/useGetMe";
 
 const Settings = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const { logout } = useLogout();
+  const { data } = useGetMe();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -27,7 +31,7 @@ const Settings = () => {
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title="Open settings">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt="Remy Sharp" src="" />
+          <Avatar alt={data?.me.username} src={data?.me.imageUrl} />
         </IconButton>
       </Tooltip>
       <Menu
@@ -46,6 +50,9 @@ const Settings = () => {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
+        <MenuItem key="profile" onClick={() => router.navigate("/profile")}>
+          <Typography textAlign="center">Profile</Typography>
+        </MenuItem>
         <MenuItem
           key="logout"
           onClick={async () => {
