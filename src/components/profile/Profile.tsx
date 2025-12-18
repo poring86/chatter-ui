@@ -1,15 +1,25 @@
+// src/components/Profile.tsx (ou o caminho correto)
+
 import { Avatar, Button, Stack, Typography } from "@mui/material";
 import { UploadFile } from "@mui/icons-material";
 import { useGetMe } from "../../hooks/useGetMe";
 import { API_URL } from "../../constants/urls";
 import { snackVar } from "../../constants/snack";
-import { useState } from "react"; // 💡 IMPORTANTE: Importar useState
+import { useState } from "react";
+
+// 💡 IMPORTS PARA ATUALIZAÇÃO GLOBAL DO CACHE
+import { useApolloClient, ApolloClient, NormalizedCacheObject } from "@apollo/client";
+import { updateMeObjectInCache } from "../../cache/me";
+
 
 const Profile = () => {
-  // 1. Receber 'data' e 'refetch' do seu hook
-  const { data, refetch } = useGetMe();
+  // Não precisamos mais do 'refetch' aqui, mas mantemos o 'data'
+  const { data } = useGetMe();
 
-  // 2. 💡 NOVO ESTADO: Variável de versão para quebrar o cache
+  // 1. Hook e Tipagem Explícita para o Cache
+  const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
+
+  // 2. Estado para o Cache Busting (forçar o recarregamento da imagem no navegador)
   const [avatarVersion, setAvatarVersion] = useState(0);
 
   const handleFileUpload = async (event: any) => {
@@ -20,24 +30,32 @@ const Profile = () => {
       const res = await fetch(`${API_URL}/users/image`, {
         method: "POST",
         body: formData,
-        // Adicione aqui headers de autenticação, se necessário (ex: Bearer Token)
       });
 
       if (!res.ok) {
         throw new Error("Image upload failed.");
       }
 
-      // 3. AÇÃO PÓS-UPLOAD BEM-SUCEDIDO:
+      // 3. Lê o objeto de usuário completo retornado pelo backend (deve ser JSON!)
+      const result = await res.json();
+      const updatedUser = result.user;
 
-      // A) Força o Apollo a reexecutar a query 'Me' e obter a nova imageUrl
-      await refetch();
+      if (!updatedUser || !updatedUser.imageUrl) {
+        throw new Error("Server response did not contain updated user data.");
+      }
 
-      // B) 💡 Incrementa a versão para mudar o 'src' do Avatar
+      // 4. ATUALIZAÇÃO GLOBAL DO CACHE (Apollo):
+      // Injeta o objeto user completo no cache, atualizando instantaneamente todos os componentes.
+      updateMeObjectInCache(client.cache, updatedUser);
+
+      // 5. QUEBRA DE CACHE DO NAVEGADOR:
+      // Mudar a versão altera o 'src' da imagem, forçando o navegador a baixar a nova imagem.
       setAvatarVersion((v) => v + 1);
 
       snackVar({ message: "Image uploaded successfully!", type: "success" });
     } catch (err) {
-      snackVar({ message: "Error uploading file.", type: "error" });
+      console.error("Upload Error:", err);
+      snackVar({ message: "Error uploading file. Check console.", type: "error" });
     }
   };
 
@@ -54,10 +72,10 @@ const Profile = () => {
     >
       <Typography variant="h1">{data?.me.username}</Typography>
 
-      {/* 4. 💡 USO DO CACHE BUSTING: Adiciona o parâmetro ?v=X ao final do URL */}
+      {/* USO DO CACHE BUSTING: */}
       <Avatar
         sx={{ width: 256, height: 256 }}
-        // Força a URL a mudar: "url_antiga.jpg?v=0" -> "url_antiga.jpg?v=1"
+        // Adiciona ?v=X para forçar o recarregamento
         src={imageUrl ? `${imageUrl}?v=${avatarVersion}` : undefined}
       />
 
@@ -68,7 +86,13 @@ const Profile = () => {
         startIcon={<UploadFile />}
       >
         Upload Image
-        <input type="file" hidden onChange={handleFileUpload} />
+        <input
+          type="file"
+          hidden
+          onChange={handleFileUpload}
+          // Reseta o input para permitir o upload do mesmo arquivo novamente
+          onClick={(e) => ((e.target as HTMLInputElement).value = "")}
+        />
       </Button>
     </Stack>
   );
