@@ -1,16 +1,32 @@
 # 💻 Chatter Frontend
 
+[![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![Apollo Client](https://img.shields.io/badge/Apollo%20Client-311C87?style=for-the-badge&logo=apollographql&logoColor=white)](https://www.apollographql.com/docs/react/)
+[![Material UI](https://img.shields.io/badge/Material%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white)](https://mui.com/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+
+## 🌟 Visão Geral
+
 O frontend do Chatter é uma aplicação React de página única (SPA) de alta performance, desenvolvida para oferecer uma experiência de chat em tempo real fluida, com uma interface moderna e gerenciamento de estado robusto via GraphQL.
+
+---
+
+### 📸 Preview da Interface
+
+![Interface do Chatter](image.png)
 
 ---
 
 ## 🚀 Tecnologias Core
 
-- **React (Vite)**: Biblioteca principal para construção da interface de usuário.
-- **TypeScript**: Adiciona tipagem estática, reduzindo bugs e melhorando a manutenção.
-- **Apollo Client**: Gerenciador de estado do servidor que lida com Queries, Mutations e Subscriptions.
-- **Material UI (MUI)**: Framework de componentes para um design consistente e responsivo.
-- **GraphQL CodeGen**: Ferramenta que gera automaticamente tipos TypeScript baseados no esquema do backend.
+| Tecnologia          | Descrição                                                         |
+| :------------------ | :---------------------------------------------------------------- |
+| **React (Vite)**    | Biblioteca principal e build tool ultra-rápida.                   |
+| **TypeScript**      | Tipagem estática para maior segurança e previsibilidade.          |
+| **Apollo Client**   | Gerenciamento de Queries, Mutations e Subscriptions (WebSockets). |
+| **Material UI**     | Framework de componentes para um design responsivo.               |
+| **GraphQL CodeGen** | Geração automática de tipos baseada no Schema do backend.         |
 
 ---
 
