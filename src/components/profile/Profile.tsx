@@ -19,9 +19,6 @@ const Profile = () => {
   // 1. Hook e Tipagem Explícita para o Cache
   const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
 
-  // 2. Estado para o Cache Busting (forçar o recarregamento da imagem no navegador)
-  const [avatarVersion, setAvatarVersion] = useState(0);
-
   const handleFileUpload = async (event: any) => {
     try {
       const formData = new FormData();
@@ -46,11 +43,13 @@ const Profile = () => {
 
       // 4. ATUALIZAÇÃO GLOBAL DO CACHE (Apollo):
       // Injeta o objeto user completo no cache, atualizando instantaneamente todos os componentes.
-      updateMeObjectInCache(client.cache, updatedUser);
+      // Adicionamos um timestamp na URL para forçar todos os componentes a quebrarem o cache de imagem.
+      const userToCache = {
+        ...updatedUser,
+        imageUrl: `${updatedUser.imageUrl}?v=${new Date().getTime()}`,
+      };
 
-      // 5. QUEBRA DE CACHE DO NAVEGADOR:
-      // Mudar a versão altera o 'src' da imagem, forçando o navegador a baixar a nova imagem.
-      setAvatarVersion((v) => v + 1);
+      updateMeObjectInCache(client.cache, userToCache);
 
       snackVar({ message: "Image uploaded successfully!", type: "success" });
     } catch (err) {
@@ -75,8 +74,7 @@ const Profile = () => {
       {/* USO DO CACHE BUSTING: */}
       <Avatar
         sx={{ width: 256, height: 256 }}
-        // Adiciona ?v=X para forçar o recarregamento
-        src={imageUrl ? `${imageUrl}?v=${avatarVersion}` : undefined}
+        src={imageUrl || undefined}
       />
 
       <Button

@@ -16,7 +16,10 @@ export const updateMeObjectInCache = (
   cache.writeQuery({
     ...meQueryOptions,
     data: {
-      me: updatedUser,
+      me: {
+        ...updatedUser,
+        __typename: "User",
+      },
     },
   });
 };

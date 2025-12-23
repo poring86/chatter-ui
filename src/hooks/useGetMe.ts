@@ -10,7 +10,7 @@ const getMeDocument = graphql(`
 `);
 
 const useGetMe = () => {
-  return useQuery(getMeDocument);
+  return useQuery(getMeDocument, { errorPolicy: "all" });
 };
 
 export { useGetMe, getMeDocument };

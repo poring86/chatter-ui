@@ -5,10 +5,11 @@ const usePath = () => {
   const [path, setPath] = useState(window.location.pathname);
 
   useEffect(() => {
-    router.subscribe((state) => {
+    const unsubsribe = router.subscribe((state) => {
       setPath(state.location.pathname);
     });
-  });
+    return () => unsubsribe();
+  }, []);
 
   return { path };
 };

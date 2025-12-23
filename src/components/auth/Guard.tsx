@@ -5,13 +5,14 @@ import { authenticatedVar } from "../../constants/authenticated";
 import { snackVar } from "../../constants/snack";
 import { UNKNOWN_ERROR_SNACK_MESSAGE } from "../../constants/errors";
 import { usePath } from "../../hooks/usePath";
+import router from "../Routes";
 
 interface GuardProps {
   children: JSX.Element;
 }
 
 const Guard = ({ children }: GuardProps) => {
-  const { data: user, error } = useGetMe();
+  const { data: user, error, loading } = useGetMe();
   const { path } = usePath();
 
   useEffect(() => {
@@ -21,12 +22,23 @@ const Guard = ({ children }: GuardProps) => {
   }, [user]);
 
   useEffect(() => {
-    if (error?.networkError) {
-      snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
+    if (user && excludedRoutes.includes(path)) {
+      router.navigate("/");
     }
-  }, [error]);
+    if (!user && !excludedRoutes.includes(path) && !loading) {
+      router.navigate("/login");
+    }
+  }, [user, path, loading]);
 
-  return <>{excludedRoutes.includes(path) ? children : user && children}</>;
+  return (
+    <>
+      {excludedRoutes.includes(path) ? (
+        children
+      ) : (
+        <>{user ? children : null}</>
+      )}
+    </>
+  );
 };
 
 export default Guard;

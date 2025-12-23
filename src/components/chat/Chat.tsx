@@ -40,12 +40,25 @@ const Chat = () => {
 
   const scrollToBottom = () => divRef.current?.scrollIntoView();
 
+  // Identifica o ID da última mensagem (a mais recente no tempo)
+  const lastMessageId = messages?.messages.length
+    ? [...messages.messages].sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    ).pop()?._id
+    : undefined;
+
+  // Scrolla para o fundo sempre que uma NOVA mensagem chegar ou mudar de chat
   useEffect(() => {
-    if (messages?.messages && messages.messages.length <= PAGE_SIZE) {
-      setMessage("");
+    if (lastMessageId) {
       scrollToBottom();
     }
-  }, [location.pathname, messages]);
+  }, [lastMessageId]);
+
+  // Limpa o input quando trocar de chat
+  useEffect(() => {
+    setMessage("");
+  }, [location.pathname]);
 
   const handleCreateMessage = async () => {
     await createMessage({

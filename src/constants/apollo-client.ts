@@ -8,13 +8,16 @@ import { createClient } from "graphql-ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 
 const logoutLink = onError((error) => {
-  if (
-    error.graphQLErrors?.length &&
-    (error.graphQLErrors[0].extensions?.originalError as any)?.statusCode ===
-      401
-  ) {
-    if (!excludedRoutes.includes(window.location.pathname)) {
-      onLogout();
+  if (error.graphQLErrors) {
+    for (const graphQLError of error.graphQLErrors) {
+      if (
+        (graphQLError.extensions?.originalError as any)?.statusCode === 401 ||
+        graphQLError.message === "Unauthorized"
+      ) {
+        if (!excludedRoutes.includes(window.location.pathname)) {
+          onLogout();
+        }
+      }
     }
   }
 });
@@ -24,6 +27,17 @@ const httpLink = new HttpLink({ uri: `${API_URL}/graphql` });
 const wsLink = new GraphQLWsLink(
   createClient({
     url: `ws://${WS_URL}/graphql`,
+    connectionParams: () => ({
+      // Aqui poderíamos passar o token se necessário,
+      // mas o backend atual parece usar cookies.
+    }),
+    lazy: true,
+    on: {
+      error: (error) => {
+        // Silencia erros de WebSocket para evitar overlay em dev
+        console.error("WebSocket Error:", error);
+      },
+    },
   })
 );
 
@@ -42,6 +56,9 @@ const splitLink = split(
 const client = new ApolloClient({
   cache: new InMemoryCache({
     typePolicies: {
+      User: {
+        keyFields: ["_id"],
+      },
       Query: {
         fields: {
           chats: {
