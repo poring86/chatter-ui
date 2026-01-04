@@ -15,11 +15,7 @@ import Snackbar from "./components/snackbar/Snackbar";
 import ChatList from "./components/chat-list/ChatList";
 import { usePath } from "./hooks/usePath";
 
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
+import { modernTheme } from "./theme/theme";
 
 const App = () => {
   const { path } = usePath();
@@ -28,17 +24,17 @@ const App = () => {
 
   return (
     <ApolloProvider client={client}>
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={modernTheme}>
         <CssBaseline />
         <Header />
         <Guard>
-          <Container maxWidth="xl" sx={{ marginTop: "1rem" }}>
+          <Container maxWidth="xl" sx={{ marginTop: "2rem" }}>
             {showChatList ? (
-              <Grid container spacing={5}>
+              <Grid container spacing={4}>
                 <Grid item xs={12} md={5} lg={4} xl={3}>
                   <ChatList />
                 </Grid>
-                <Grid xs={12} item md={7} lg={8} xl={9}>
+                <Grid xs={12} item md={7} lg={8} xl={9} sx={{ display: 'flex', flexDirection: 'column' }}>
                   <Routes />
                 </Grid>
               </Grid>

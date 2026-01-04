@@ -1,5 +1,5 @@
 import ChatListItem from "./chat-list-item/ChatListItem";
-import { Box, Divider, Stack } from "@mui/material";
+import { Box, Divider, Stack, Paper } from "@mui/material";
 import ChatListHeader from "./chat-list-header/ChatListHeader";
 import { useEffect, useState } from "react";
 import ChatListAdd from "./chat-list-add/ChatListAdd";
@@ -39,15 +39,21 @@ const ChatList = () => {
         open={chatListAddVisible}
         handleClose={() => setChatListAddVisible(false)}
       />
-      <Stack>
+      <Paper sx={{
+        height: 'calc(100vh - 120px)',
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: 4, // Softer rounding
+        overflow: 'hidden'
+      }}>
         <ChatListHeader handleAddChat={() => setChatListAddVisible(true)} />
-        <Divider />
         <Box
           sx={{
             width: "100%",
-            bgcolor: "background.paper",
-            maxHeight: "80vh",
+            flex: 1,
             overflow: "auto",
+            '&::-webkit-scrollbar': { width: '4px' },
+            '&::-webkit-scrollbar-thumb': { backgroundColor: 'rgba(255, 0, 255, 0.1)', borderRadius: '10px' }
           }}
         >
           {/* @ts-ignore */}
@@ -56,7 +62,7 @@ const ChatList = () => {
             loadMore={() =>
               fetchMore({
                 variables: {
-                  skip: data?.chats.length,
+                  skip: data?.chats.length || 0,
                 },
               })
             }
@@ -85,7 +91,7 @@ const ChatList = () => {
                 .reverse()}
           </InfiniteScroll>
         </Box>
-      </Stack>
+      </Paper>
     </>
   );
 };

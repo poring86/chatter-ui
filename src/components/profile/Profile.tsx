@@ -1,6 +1,7 @@
 // src/components/Profile.tsx (ou o caminho correto)
 
 import { Avatar, Button, Stack, Typography } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import { UploadFile } from "@mui/icons-material";
 import { useGetMe } from "../../hooks/useGetMe";
 import { API_URL } from "../../constants/urls";
@@ -27,6 +28,7 @@ const Profile = () => {
       const res = await fetch(`${API_URL}/users/image`, {
         method: "POST",
         body: formData,
+        credentials: "include",
       });
 
       if (!res.ok) {
@@ -64,16 +66,27 @@ const Profile = () => {
     <Stack
       spacing={6}
       sx={{
-        marginTop: "2.5rem",
+        marginTop: "4rem",
         alignItems: "center",
         justifyContent: "center",
+        p: 4,
+        borderRadius: 4,
+        background: alpha("#1a1a2e", 0.4),
+        backdropFilter: "blur(20px)",
+        border: `1px solid ${alpha("#ff00ff", 0.2)}`,
+        boxShadow: "0 0 30px rgba(0, 0, 0, 0.5)"
       }}
     >
       <Typography variant="h1">{data?.me.username}</Typography>
 
       {/* USO DO CACHE BUSTING: */}
       <Avatar
-        sx={{ width: 256, height: 256 }}
+        sx={{
+          width: 200,
+          height: 200,
+          border: '4px solid #ff00ff',
+          boxShadow: '0 0 20px rgba(255,0,255,0.4)'
+        }}
         src={imageUrl || undefined}
       />
 
@@ -82,6 +95,11 @@ const Profile = () => {
         variant="contained"
         size="large"
         startIcon={<UploadFile />}
+        sx={{
+          px: 4,
+          py: 1.5,
+          fontSize: '1.1rem'
+        }}
       >
         Upload Image
         <input

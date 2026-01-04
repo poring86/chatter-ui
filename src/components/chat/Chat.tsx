@@ -11,6 +11,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import SendIcon from "@mui/icons-material/Send";
 import { useCreateMessage } from "../../hooks/useCreateMessage";
 import { useEffect, useRef, useState } from "react";
@@ -69,15 +70,21 @@ const Chat = () => {
   };
 
   return (
-    <Stack sx={{ height: "100%", justifyContent: "space-between" }}>
-      <h1>{data?.chat.name}</h1>
-      <Box sx={{ height: "75vh", overflow: "auto" }}>
+    <Stack sx={{ height: "100%", justifyContent: "space-between", gap: 2 }}>
+      <Typography variant="h1" sx={{ mb: 2 }}>{data?.chat.name}</Typography>
+      <Box sx={{
+        height: "70vh",
+        overflow: "auto",
+        pr: 1,
+        '&::-webkit-scrollbar': { width: '6px' },
+        '&::-webkit-scrollbar-thumb': { backgroundColor: 'rgba(255, 0, 255, 0.2)', borderRadius: '10px' }
+      }}>
         {/* @ts-ignore */}
         <InfiniteScroll
           pageStart={0}
           isReverse={true}
           loadMore={() =>
-            fetchMore({ variables: { skip: messages?.messages.length } })
+            fetchMore({ variables: { skip: messages?.messages.length || 0 } })
           }
           hasMore={
             messages && messagesCount
@@ -94,35 +101,37 @@ const Chat = () => {
                   new Date(messageB.createdAt).getTime()
               )
               .map((message) => (
-                <Grid container alignItems="center" marginBottom="1rem">
+                <Grid container alignItems="flex-start" marginBottom="1.5rem" spacing={2}>
                   <Grid item xs={2} lg={1}>
                     <Stack
                       spacing={1}
                       alignItems="center"
-                      justifyContent="center"
                     >
                       <Avatar
                         src={message.user.imageUrl}
-                        sx={{ width: 52, height: 52 }}
+                        sx={{ width: 44, height: 44 }}
                       />
-                      <Typography variant="caption">
+                      <Typography variant="caption" sx={{ opacity: 0.7, fontWeight: 500 }}>
                         {message.user.username}
                       </Typography>
                     </Stack>
                   </Grid>
                   <Grid item xs={10} lg={11}>
                     <Stack>
-                      <Paper sx={{ width: "fit-content" }}>
-                        <Typography sx={{ padding: "0.9rem" }}>
+                      <Paper sx={{
+                        width: "fit-content",
+                        borderRadius: 2,
+                        padding: "4px 8px"
+                      }}>
+                        <Typography sx={{ padding: "0.6rem 1rem", fontSize: "0.95rem" }}>
                           {message.content}
                         </Typography>
                       </Paper>
                       <Typography
                         variant="caption"
-                        sx={{ marginLeft: "0.25rem" }}
+                        sx={{ marginLeft: "0.5rem", marginTop: "0.25rem", opacity: 0.5 }}
                       >
-                        {new Date(message.createdAt).toLocaleTimeString()} -{" "}
-                        {new Date(message.createdAt).toLocaleDateString()}{" "}
+                        {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </Typography>
                     </Stack>
                   </Grid>
@@ -133,30 +142,38 @@ const Chat = () => {
       </Box>
       <Paper
         sx={{
-          p: "2px 4px",
+          p: "8px 16px",
           display: "flex",
-          justifySelf: "flex-end",
           alignItems: "center",
           width: "100%",
-          margin: "1rem 0",
+          borderRadius: 4,
+          backgroundColor: alpha("#1a1a2e", 0.4),
+          border: `1px solid ${alpha("#ff00ff", 0.3)}`,
+          mb: 2
         }}
       >
         <InputBase
-          sx={{ ml: 1, flex: 1, width: "100%" }}
+          sx={{ ml: 1, flex: 1, color: 'white' }}
           onChange={(event) => setMessage(event.target.value)}
           value={message}
-          placeholder="Message"
+          placeholder="Type a message..."
           onKeyDown={async (event) => {
             if (event.key === "Enter") {
               await handleCreateMessage();
             }
           }}
         />
-        <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
         <IconButton
           onClick={handleCreateMessage}
           color="primary"
-          sx={{ p: "10px" }}
+          sx={{
+            p: "8px",
+            background: "linear-gradient(45deg, #ff00ff 30%, #7000ff 90%)",
+            color: "white",
+            "&:hover": {
+              boxShadow: "0 0 15px rgba(255, 0, 255, 0.6)",
+            }
+          }}
         >
           <SendIcon />
         </IconButton>

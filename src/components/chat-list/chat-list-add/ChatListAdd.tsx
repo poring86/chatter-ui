@@ -10,11 +10,13 @@ import { useState } from "react";
 import { useCreateChat } from "../../../hooks/useCreateChat";
 import { UNKNOWN_ERROR_MESSAGE } from "../../../constants/errors";
 import router from "../../Routes";
+import { alpha } from "@mui/material/styles";
 
 interface ChatListAddProps {
   open: boolean;
   handleClose: () => void;
 }
+
 
 const ChatListAdd = ({ open, handleClose }: ChatListAddProps) => {
   const [error, setError] = useState("");
@@ -28,32 +30,63 @@ const ChatListAdd = ({ open, handleClose }: ChatListAddProps) => {
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal
+      open={open}
+      onClose={onClose}
+      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+    >
       <Box
         sx={{
-          position: "absolute" as "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
           width: 400,
-          bgcolor: "background.paper",
-          border: "2px solid #000",
-          boxShadow: 24,
           p: 4,
+          borderRadius: 3,
+          backgroundColor: alpha("#1a1a2e", 0.6),
+          backdropFilter: "blur(20px)",
+          border: `1px solid ${alpha("#ff00ff", 0.2)}`,
+          boxShadow: `0 0 40px ${alpha("#000000", 0.6)}`,
+          outline: 'none'
         }}
       >
-        <Stack spacing={2}>
-          <Typography variant="h6" component="h2">
-            Add Chat
+        <Stack spacing={4}>
+          <Typography variant="h4" sx={{
+            fontWeight: 700,
+            textAlign: 'center',
+            background: "linear-gradient(45deg, #ff00ff 30%, #7000ff 90%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}>
+            New Chat
           </Typography>
           <TextField
-            label="Name"
+            label="Chat Name"
             error={!!error}
             helperText={error}
+            variant="outlined"
+            fullWidth
             onChange={(event) => setName(event.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+                backgroundColor: alpha("#ffffff", 0.05),
+                '& fieldset': { borderColor: alpha("#ffffff", 0.2) },
+                '&:hover fieldset': { borderColor: alpha("#ff00ff", 0.5) },
+                '&.Mui-focused fieldset': { borderColor: "#ff00ff" },
+              },
+              '& .MuiInputLabel-root': { color: alpha("#ffffff", 0.6) },
+              '& .MuiInputBase-input': { color: 'white' }
+            }}
           />
           <Button
-            variant="outlined"
+            variant="contained"
+            fullWidth
+            sx={{
+              py: 1.5,
+              fontSize: '1.1rem',
+              background: "linear-gradient(45deg, #ff00ff 30%, #7000ff 90%)",
+              "&:hover": {
+                boxShadow: "0 0 20px rgba(255, 0, 255, 0.5)",
+              }
+            }}
             onClick={async () => {
               if (!name.length) {
                 setError("Chat name is required.");
@@ -72,7 +105,7 @@ const ChatListAdd = ({ open, handleClose }: ChatListAddProps) => {
               }
             }}
           >
-            Save
+            Create
           </Button>
         </Stack>
       </Box>

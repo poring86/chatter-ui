@@ -58,10 +58,12 @@ const Settings = () => {
           onClick={async () => {
             try {
               await logout();
-              onLogout();
-              handleCloseUserMenu();
             } catch (err) {
-              snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
+              console.error(err);
+              // Prossiga para o logout local mesmo se a requisição ao servidor falhar (ex: sessao já expirada)
+            } finally {
+              await onLogout();
+              handleCloseUserMenu();
             }
           }}
         >

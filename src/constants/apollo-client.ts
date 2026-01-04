@@ -22,7 +22,10 @@ const logoutLink = onError((error) => {
   }
 });
 
-const httpLink = new HttpLink({ uri: `${API_URL}/graphql` });
+const httpLink = new HttpLink({ 
+  uri: `${API_URL}/graphql`,
+  credentials: "include",
+});
 
 const wsLink = new GraphQLWsLink(
   createClient({

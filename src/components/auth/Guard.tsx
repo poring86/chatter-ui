@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import excludedRoutes from "../../constants/excluded-routes";
 import { useGetMe } from "../../hooks/useGetMe";
 import { authenticatedVar } from "../../constants/authenticated";
+import { useReactiveVar } from "@apollo/client";
 import { snackVar } from "../../constants/snack";
 import { UNKNOWN_ERROR_SNACK_MESSAGE } from "../../constants/errors";
 import { usePath } from "../../hooks/usePath";
@@ -12,7 +13,8 @@ interface GuardProps {
 }
 
 const Guard = ({ children }: GuardProps) => {
-  const { data: user, error, loading } = useGetMe();
+  const { data: user, loading } = useGetMe();
+  const authenticated = useReactiveVar(authenticatedVar);
   const { path } = usePath();
 
   useEffect(() => {
@@ -22,13 +24,13 @@ const Guard = ({ children }: GuardProps) => {
   }, [user]);
 
   useEffect(() => {
-    if (user && excludedRoutes.includes(path)) {
+    if (authenticated && user && excludedRoutes.includes(path)) {
       router.navigate("/");
     }
-    if (!user && !excludedRoutes.includes(path) && !loading) {
+    if (!authenticated && !excludedRoutes.includes(path) && !loading) {
       router.navigate("/login");
     }
-  }, [user, path, loading]);
+  }, [user, path, loading, authenticated]);
 
   return (
     <>

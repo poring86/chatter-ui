@@ -2,6 +2,7 @@ import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
+import { alpha } from "@mui/material/styles";
 import Branding from "./Branding";
 import MobileNavigation from "./mobile/MobileNavigation";
 import MobileBranding from "./mobile/MobileBranding";
@@ -33,7 +34,16 @@ const Header = () => {
   const authenticated = useReactiveVar(authenticatedVar);
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: "transparent",
+        backgroundImage: "none",
+        boxShadow: "none",
+        borderBottom: `1px solid ${alpha("#ffffff", 0.1)}`,
+        backdropFilter: "blur(10px)"
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Branding />

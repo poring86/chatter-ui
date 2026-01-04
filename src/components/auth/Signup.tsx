@@ -26,6 +26,7 @@ const Signup = () => {
           onChange={(event) => setUsername(event.target.value)}
           error={!!error}
           helperText={error}
+          InputLabelProps={{ shrink: true }}
         />,
       ]}
       onSubmit={async ({ email, password }) => {
